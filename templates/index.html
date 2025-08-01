@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMate AI - Mental Wellness Platform</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.2/dist/purify.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Floating Background Animation -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="container">
+        <!-- Landing Page -->
+        <div id="landing" class="page active">
+            <div class="landing-content">
+                <h1 class="logo">🧠 MindMate AI</h1>
+                <p class="subtitle">Your Mental Wellness Companion</p>
+                <div class="role-selection">
+                    <div class="role-card" onclick="showLogin('student')">
+                        <div class="role-icon">🎓</div>
+                        <h3 class="role-title">Student</h3>
+                        <p class="role-desc">Track your mental wellness journey</p>
+                    </div>
+                    <div class="role-card" onclick="showLogin('teacher')">
+                        <div class="role-icon">👨‍🏫</div>
+                        <h3 class="role-title">Teacher</h3>
+                        <p class="role-desc">Monitor student wellbeing trends</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Login -->
+        <div id="student-login" class="page">
+            <div class="login-container">
+                <div class="login-header">
+                    <h2 class="login-title">Student Login</h2>
+                    <p class="login-subtitle">Welcome back! Please sign in to continue</p>
+                </div>
+                <form id="student-login-form" onsubmit="handleStudentLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="text" class="form-input" id="student-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="student-password" required>
+                    </div>
+                    <button id="student-login-btn" type="submit" class="login-btn">Login</button>
+                    <button type="button" class="login-btn back-btn" onclick="showPage('landing')">Back</button>
+                      <p style="text-align: center; margin-top: 1rem;">
+                Don’t have an account?
+                <a href="#" onclick="showPage('student-signup')" style="color: #4ade80; text-decoration: underline;">Sign up here</a>
+            </p>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- Student Signup -->
+        <div id="student-signup" class="page">
+            <div class="signup-container">
+                <div class="signup-header">
+                    <h2 class="signup-title">New Student!</h2>
+                    <p class="signup-subtitle">Welcome to MindMate</p>
+                </div>
+
+                <form id="student-signup-form" onsubmit="handleStudentSignup(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="signup-username">Username</label>
+                        <input type="text" class="form-input" id="signup-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="signup-email">Email</label>
+                        <input type="email" class="form-input" id="signup-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="signup-password">Password</label>
+                        <input type="password" class="form-input" id="signup-password" required>
+                    </div>
+
+                    <button type="submit" class="signup-btn">Create Account</button>
+                    <button type="button" class="login-btn back-btn" onclick="showPage('student-login')">Back to Login</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Teacher Login -->
+        <div id="teacher-login" class="page">
+            <div class="login-container">
+                <div class="login-header">
+                    <h2 class="login-title">Teacher Login</h2>
+                    <p class="login-subtitle">Access your student wellness dashboard</p>
+                </div>
+                <form id="teacher-login-form" onsubmit="handleTeacherLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Teacher ID</label>
+                        <input type="text" class="form-input" id="teacher-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="teacher-password" required>
+                    </div>
+                    <button type="submit" class="login-btn">Login</button>
+                    <button type="button" class="login-btn back-btn" onclick="showPage('landing')">Back</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div id="student-dashboard" class="page">
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Welcome back! 🌟</h1>
+                </div>
+                
+                <div class="mood-selector-container">
+                    <h2 class="mood-question">How are you feeling today?</h2>
+                    <div class="mood-options">
+                        <button class="mood-btn" onclick="selectMood('happy')">😊 Happy</button>
+                        <button class="mood-btn" onclick="selectMood('neutral')">😐 Neutral</button>
+                        <button class="mood-btn" onclick="selectMood('sad')">😢 Sad</button>
+                        <button class="mood-btn" onclick="selectMood('anxious')">😰 Anxious</button>
+                        <button class="mood-btn" onclick="selectMood('excited')">🤩 Excited</button>
+                        <button class="mood-btn" onclick="selectMood('tired')">😴 Tired</button>
+                    </div>
+                </div>
+
+                <div id="chat-section" class="hidden">
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-messages">
+                            <div style="color: rgba(12, 0, 0, 0.8); text-align: center; margin-top: 2rem;">
+                                Hi! I'm here to listen and support you. How can I help today?
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="chat-input" placeholder="Ask something..." />
+                            <button class="send-btn" onclick="sendMessage()">Send</button>
+                           <button id="stop-voice-btn" onclick="stopVoice()">Stop Voice</button>
+                            <button id="voice-mode-btn" onclick="toggleVoiceMode()">🎙 Voice Mode</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button onclick="toggleHistory()" class="login-btn back-btn" style="margin-top: 1rem;">Previous Chats History</button>
+                <div id="chat-history-container" class="hidden">
+                    <h3>Previous Chats</h3>
+                    <div id="chat-history-list"></div>
+                </div>
+
+                <button class="login-btn back-btn" onclick="logout()" style="margin-top: 2rem; max-width: 200px;">Logout</button>
+            </div>
+        </div>
+
+        <!-- Teacher Dashboard -->
+        <div id="teacher-dashboard" class="page">
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Teacher Dashboard 📊</h1>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">😊</div>
+                        <div class="stat-label">Most Common Mood</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0%</div>
+                        <div class="stat-label">Positive Responses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Need Support</div>
+                    </div>
+                </div>
+
+                <div id="support-popup" class="popup-overlay" style="display: none;">
+                    <div class="popup-content">
+                        <div class="popup-header">
+                            <h3>📋 Students Need Support</h3>
+                            <button class="close-popup" onclick="closeSupportPopup()">✖</button>
+                        </div>
+                        <div class="popup-body">
+                            <div id="support-list">
+                                <div class="loading-message">Loading students who need support...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">Weekly Mood Trends</h3>
+                    <canvas id="moodChart" width="400" height="200"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">Daily Check-ins</h3>
+                    <canvas id="checkinChart" width="400" height="200"></canvas>
+                </div>
+
+                <button class="login-btn back-btn" onclick="logout()" style="margin-top: 2rem; max-width: 200px;">Logout</button>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
